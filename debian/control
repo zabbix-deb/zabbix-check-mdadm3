@@ -1,0 +1,16 @@
+Source: zabbix-check-mdadm3
+Maintainer: Sebastian Huebner <shuebner@benhur.de>
+Section: net
+Priority: optional
+Standards-Version: 3.8.4
+
+Package: zabbix-check-mdadm3
+Architecture: all
+Pre-Depends: zabbix-agent (>=2.0)
+Conflicts: zabbix-check-mdadm, zabbix-check-mdadm2
+Replaces: zabbix-check-mdadm, zabbix-check-mdadm2
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: mdadm scripts for zabbix-agent
+ Provides a low level discovery script, which discover
+ mdadm devices and a second script which get the array
+ state and faulty disk count.

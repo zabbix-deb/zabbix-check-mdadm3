@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+return_val="{\"data\":["
+
+# searching for device names in /dev, which are starting with "md"
+for file in /dev/*; do
+    file="${file##*/}"
+
+    if [ "${file%${file#md}}" = "md" ] && [ -n "${file#md}" ]; then
+        return_val="${return_val}{\"{#MD}\":\"${file}\"},"
+    fi
+done
+
+echo "${return_val%,}]}"

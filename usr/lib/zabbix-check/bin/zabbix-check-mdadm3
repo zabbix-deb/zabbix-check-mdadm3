@@ -1,0 +1,60 @@
+#!/usr/bin/env sh
+# the scripts reads the array state and faulty disk
+# count from sysfs, instead of parsing the output of
+# "/proc/mdstat" and "mdadm -D", like the old versions
+# zabbix-check-mdadm or zabbix-check-mdadm2 did
+
+CMD="${1}"
+DISK="${2}"
+
+
+fail() {
+    echo "ZBX_NOTSUPPORTED"
+    exit 1
+}
+
+get_faulty_disk_count() {
+    read val 2>/dev/null < /sys/block/"${1}"/md/degraded && echo "${val}"
+}
+
+get_sync_state() {
+    read val 2>/dev/null < /sys/block/"${1}"/md/sync_action && echo "${val}"
+}
+
+get_array_state() {
+    degraded=$(get_faulty_disk_count "${1}")
+    sync_state=$(get_sync_state "${1}")
+
+    ([ -z "${degraded}" ] || [ -z "${sync_state}" ]) && fail
+
+    if [ ${degraded} -gt 0 ]; then
+        if [ "${sync_state}" = "idle" ]; then
+            state="degraded"
+        else
+            state="${sync_state}"
+        fi
+    elif [ ${degraded} -eq 0 ]; then
+        if [ "${sync_state}" = "idle" ]; then
+            state="clean"
+        else
+            state="${sync_state}"
+        fi
+    fi
+
+    [ -z "${state}" ] && state="unknown"
+
+    echo "${state}"
+}
+
+
+if [ -n "${CMD}" ] && [ -n "${DISK}" ]; then
+    if [ "${CMD}" = "array_state" ]; then
+        get_array_state "${DISK}"
+    elif [ "${CMD}" = "faulty_disks" ]; then
+        get_faulty_disk_count "${DISK}"
+    else
+        fail
+    fi
+else
+    fail
+fi

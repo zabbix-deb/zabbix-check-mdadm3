@@ -1,0 +1,6 @@
+zabbix-check-mdadm3 (0.1) focal; urgency=low
+
+  * Initial release. A much simpler version than the last ones,
+    written in POSIX shell.
+
+ -- Sebastian Huebner <shuebner@benhur.de>  Mon, 07 Dec 2020 13:00:02 +0100

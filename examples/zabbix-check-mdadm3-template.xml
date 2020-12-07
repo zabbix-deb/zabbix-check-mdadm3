@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>5.0</version>
+    <date>2020-12-07T12:05:47Z</date>
+    <groups>
+        <group>
+            <name>Templates</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template App mdadm3</template>
+            <name>Template App mdadm3</name>
+            <description></description>
+            <groups>
+                <group>
+                    <name>Templates</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>mdadm</name>
+                </application>
+            </applications>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>MD Discovery</name>
+                    <key>mdadm.discovery</key>
+                    <delay>1d</delay>
+                    <lifetime>2d</lifetime>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>MDADM state in Raid {#MD}</name>
+                            <key>mdadm[array_state,{#MD}]</key>
+                            <delay>15m</delay>
+                            <history>1w</history>
+                            <trends>0</trends>
+                            <value_type>CHAR</value_type>
+                            <applications>
+                                <application>
+                                    <name>mdadm</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>MDADM defect Disk's in Raid {#MD}</name>
+                            <key>mdadm[faulty_disks,{#MD}]</key>
+                            <delay>15m</delay>
+                            <history>1w</history>
+                            <applications>
+                                <application>
+                                    <name>mdadm</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}&gt;0</expression>
+                                    <name>mdadm {ITEM.VALUE1} disk(s) missed in Raid {#MD} on {HOSTNAME}</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+        </template>
+    </templates>
+</zabbix_export>

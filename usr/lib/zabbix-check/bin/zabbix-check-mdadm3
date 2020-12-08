@@ -48,13 +48,17 @@ get_array_state() {
 
 
 if [ -n "${CMD}" ] && [ -n "${DISK}" ]; then
-    if [ "${CMD}" = "array_state" ]; then
-        get_array_state "${DISK}"
-    elif [ "${CMD}" = "faulty_disks" ]; then
-        get_faulty_disk_count "${DISK}"
-    else
-        fail
-    fi
+    case "${CMD}" in
+        array_state)
+            get_array_state "${DISK}"
+        ;;
+        faulty_disks)
+            get_faulty_disk_count "${DISK}"
+        ;;
+        *)
+            fail
+        ;;
+    esac
 else
     fail
 fi
